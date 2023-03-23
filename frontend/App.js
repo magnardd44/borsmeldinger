@@ -12,9 +12,20 @@ export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
 
   const addTokenToDb = async () => {
+
+    const { data:record, error } = await supabase
+    .from("users")
+    .select("*")
+      .eq("expo_push_token", expoPushToken);
     
-    const res = await supabase.from('users').insert({ expo_push_token: expoPushToken })
-    console.log(res);
+    if (record.length > 0) {
+      console.log('Eksisterer!');
+    } else {
+      const res = await supabase.from('users').upsert({ expo_push_token: expoPushToken })
+      console.log(res);
+    }
+        
+    
   }
 
   
